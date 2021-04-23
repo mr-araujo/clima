@@ -15,18 +15,33 @@ struct ContentView: View {
         
         VStack(alignment: .trailing) {
             HStack {
-                Image(systemName: "location.circle.fill")
-                    .font(.title)
                 
-                TextField("Search", text: $query)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                Button(action: {
+                    searchFor(query)
+                }) {
+                    Image(systemName: "location.circle.fill")
+                        .foregroundColor(.black)
+                        .font(.title)
+                }
                 
-                Image(systemName: "magnifyingglass")
-                    .font(.title)
+                TextField("String", text: $query, onCommit: {
+                    searchFor(query)
+                })
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .keyboardType(.webSearch)
+                
+                Button(action: {
+                    searchFor(query)
+                }) {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundColor(.black)
+                        .font(.title)
+                }
             }
             .padding()
             
             VStack(alignment: .trailing) {
+                
                 Image(systemName: "sun.max.fill")
                     .font(.system(size: 90))
                 
@@ -48,10 +63,25 @@ struct ContentView: View {
         )
         
     }
+    
+    func searchFor(_ city: String) {
+        print("City \(city)")
+        self.query = ""
+        hideKeyboard()
+    }
 }
+
+#if canImport(UIKit)
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+#endif
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            
     }
 }
