@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    
     @State private var query: String = ""
+    @ObservedObject var viewModel = WeatherViewModel()
     
     var body: some View {
         
         VStack(alignment: .trailing) {
             HStack {
-                
                 Button(action: {
                     searchFor(query)
                 }) {
@@ -45,10 +44,10 @@ struct ContentView: View {
                 Image(systemName: "sun.max.fill")
                     .font(.system(size: 90))
                 
-                Text("21º C")
+                Text("\(viewModel.weather?.main.temp ?? 19)° C")
                     .font(.system(size: 90))
                 
-                Text("London")
+                Text(viewModel.weather?.name ?? "São Paulo")
                     .font(.system(size: 30))
             } .padding()
             
@@ -65,7 +64,7 @@ struct ContentView: View {
     }
     
     func searchFor(_ city: String) {
-        print("City \(city)")
+        viewModel.fetchWeather(from: city)
         self.query = ""
         hideKeyboard()
     }
